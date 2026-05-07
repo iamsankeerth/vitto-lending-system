@@ -44,3 +44,9 @@ coverage/
 *.pid
 *.seed
 *.pid.lock
+.superpowers/
+backend/server.log
+backend/server.err
+backend/server*.log
+backend/server*.err
+frontend/frontend.log
