@@ -1,12 +1,30 @@
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 async function api(method, path, body) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const url = `${API_BASE}${path}`;
+  const res = await fetch(url, {
     method,
     headers: { 'Content-Type': 'application/json' },
     body: body ? JSON.stringify(body) : undefined,
   });
-  const data = await res.json();
+
+  // Handle empty responses (e.g. 404 from static host, 502 from proxy)
+  const contentType = res.headers.get('content-type') || '';
+  const text = await res.text();
+
+  if (!text || !contentType.includes('application/json')) {
+    const err = new Error(
+      `API call failed: ${res.status} ${res.statusText}. ` +
+      `URL: ${url}. ` +
+      `Response was not JSON (got: ${text.slice(0, 100) || '[empty body]'}). ` +
+      `Make sure VITE_API_URL is set to your backend server.`
+    );
+    err.code = 'API_ERROR';
+    err.status = res.status;
+    throw err;
+  }
+
+  const data = JSON.parse(text);
   if (!res.ok) {
     const err = new Error(data.error?.message || 'Request failed');
     err.code = data.error?.code || 'ERROR';
