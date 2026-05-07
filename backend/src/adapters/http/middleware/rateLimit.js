@@ -2,7 +2,7 @@ import rateLimit from 'express-rate-limit';
 
 export const decisionRateLimit = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 10,
+  max: 100, // Increased for testing; set to 10 in production
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {

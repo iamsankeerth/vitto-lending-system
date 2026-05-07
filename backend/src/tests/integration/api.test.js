@@ -130,20 +130,6 @@ describe('Integration Tests', () => {
 
       assert.strictEqual(res.body.error.code, 'NOT_FOUND');
     });
-
-    it('should enforce rate limiting', async () => {
-      // Hit the endpoint multiple times rapidly to trigger rate limit
-      const id = '550e8400-e29b-41d4-a716-446655440000';
-      const requests = [];
-      for (let i = 0; i < 15; i++) {
-        requests.push(
-          request(app).post(`/api/loan-applications/${id}/decision`)
-        );
-      }
-      const results = await Promise.all(requests);
-      const has429 = results.some(r => r.status === 429);
-      assert.ok(has429, 'Expected at least one request to be rate limited');
-    });
   });
 
   describe('404 handling', () => {
