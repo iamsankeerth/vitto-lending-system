@@ -8,7 +8,12 @@ export class LoanApplicationController {
 
   create = async (req, res, next) => {
     try {
-      const dto = req.body;
+      const dto = {
+        businessProfileId: req.body.businessProfileId,
+        requestedAmountPaise: Math.round(req.body.requestedAmountRupees * 100),
+        tenureMonths: req.body.tenureMonths,
+        purpose: req.body.purpose,
+      };
       const application = await this.createUseCase.execute(dto);
       res.status(201).json(success({
         id: application.id,

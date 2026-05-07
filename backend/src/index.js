@@ -5,8 +5,12 @@ import { config } from './infrastructure/config/env.js';
 
 async function main() {
   try {
-    await connectMongo();
-    console.log('MongoDB connected');
+    try {
+      await connectMongo();
+      console.log('MongoDB connected');
+    } catch (mongoErr) {
+      console.warn('MongoDB not available, continuing without audit trail:', mongoErr.message);
+    }
 
     await pool.query('SELECT 1');
     console.log('PostgreSQL connected');

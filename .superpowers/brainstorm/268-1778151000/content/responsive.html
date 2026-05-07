@@ -1,0 +1,99 @@
+<h2>Design C — Responsive Behavior</h2>
+<p class="subtitle">Mobile-first approach for the Bold & Modern design.</p>
+
+<div class="section">
+  <h3>Desktop (≥ 768px)</h3>
+  <div style="max-width:800px; margin:0 auto; margin-bottom:20px; border:2px solid #f59e0b; border-radius:12px; padding:4px; background:#f8fafc;">
+    <div style="display:flex; gap:12px; align-items:flex-start;">
+      <div style="flex:1;">
+        <div style="background:#0f172a; padding:12px; border-radius:8px 8px 0 0; color:#fff; font-size:0.7rem; font-weight:600; text-align:center;">Header (gradient)</div>
+        <div style="max-width:700px; margin:8px auto;">
+          <div style="background:#fff; padding:10px; border-radius:8px; margin-bottom:4px; font-size:0.7rem; text-align:center; color:#475569;">Form Card 1 (2-col grid)</div>
+          <div style="background:#fff; padding:10px; border-radius:8px; margin-bottom:4px; font-size:0.7rem; text-align:center; color:#475569;">Form Card 2 (2-col grid)</div>
+          <div style="display:flex; gap:8px; margin-bottom:4px;">
+            <div style="flex:1; background:#f59e0b; padding:10px; border-radius:8px; font-size:0.7rem; text-align:center; color:#fff; font-weight:600;">Submit</div>
+            <div style="width:80px; background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0; font-size:0.7rem; text-align:center; color:#64748b;">Reset</div>
+          </div>
+          <div style="background:#fff; padding:10px; border-radius:8px; font-size:0.7rem; text-align:center; color:#475569;">Result Card (4-col metrics)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Mobile (< 768px)</h3>
+  <div style="max-width:360px; margin:0 auto; margin-bottom:20px; border:2px solid #f59e0b; border-radius:12px; padding:4px; background:#f8fafc;">
+    <div>
+      <div style="background:#0f172a; padding:10px; border-radius:8px 8px 0 0; color:#fff; font-size:0.65rem; font-weight:600; text-align:center;">Header (full width)</div>
+      <div style="margin:6px 8px;">
+        <div style="background:#fff; padding:8px; border-radius:8px; margin-bottom:3px; font-size:0.65rem; text-align:center; color:#475569;">Form Card 1 (stacked fields)</div>
+        <div style="background:#fff; padding:8px; border-radius:8px; margin-bottom:3px; font-size:0.65rem; text-align:center; color:#475569;">Form Card 2 (stacked fields)</div>
+        <div style="display:flex; gap:6px; margin-bottom:3px;">
+          <div style="flex:1; background:#f59e0b; padding:10px; border-radius:8px; font-size:0.65rem; text-align:center; color:#fff; font-weight:600;">Submit</div>
+          <div style="width:60px; background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0; font-size:0.65rem; text-align:center; color:#64748b;">Reset</div>
+        </div>
+        <div style="background:#fff; padding:8px; border-radius:8px; font-size:0.65rem; text-align:center; color:#475569;">Result Card (2-col metrics)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Breakpoint Rules</h3>
+  <div style="max-width:700px; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Mobile (&lt; 640px)</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Form fields: single column</li>
+          <li>Metrics grid: 2 columns</li>
+          <li>Container: full width - 16px</li>
+          <li>Header: no glow orb (perf)</li>
+          <li>Score donut: 100px (vs 130px)</li>
+          <li>Buttons: full width stack</li>
+        </ul>
+      </div>
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Tablet (640px - 1023px)</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Form fields: 2 columns</li>
+          <li>Metrics: 4 columns</li>
+          <li>Container: max 700px</li>
+          <li>Buttons: side by side</li>
+          <li>Same as desktop layout</li>
+        </ul>
+      </div>
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Desktop (≥ 1024px)</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Container: max 700px centered</li>
+          <li>Header glow orb visible</li>
+          <li>Score donut: 130px</li>
+          <li>Timeline connector dots visible</li>
+          <li>Hover states on all interactive</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Tailwind Breakpoint Classes Used</h3>
+  <div style="max-width:700px; margin:0 auto; background:#0f172a; padding:20px 24px; border-radius:12px; font-family:'Courier New',monospace; font-size:0.8rem; color:#e2e8f0; line-height:1.8;">
+    <div><span style="color:#94a3b8;">// Form grid</span></div>
+    <div><span style="color:#f59e0b;">grid grid-cols-1 sm:grid-cols-2</span> <span style="color:#94a3b8;">gap-4</span></div>
+    <div>&nbsp;</div>
+    <div><span style="color:#94a3b8;">// Metrics grid</span></div>
+    <div><span style="color:#f59e0b;">grid grid-cols-2 sm:grid-cols-4</span> <span style="color:#94a3b8;">gap-3</span></div>
+    <div>&nbsp;</div>
+    <div><span style="color:#94a3b8;">// Container</span></div>
+    <div><span style="color:#f59e0b;">mx-auto max-w-xl sm:max-w-2xl lg:max-w-2xl</span></div>
+    <div>&nbsp;</div>
+    <div><span style="color:#94a3b8;">// Header glow (hidden on mobile)</span></div>
+    <div><span style="color:#f59e0b;">hidden sm:block</span></div>
+    <div>&nbsp;</div>
+    <div><span style="color:#94a3b8;">// Buttons stack on mobile</span></div>
+    <div><span style="color:#f59e0b;">flex flex-col sm:flex-row</span> <span style="color:#94a3b8;">gap-3</span></div>
+  </div>
+</div>

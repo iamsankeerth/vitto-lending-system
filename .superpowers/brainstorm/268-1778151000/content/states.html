@@ -1,0 +1,130 @@
+<h2>Design C — States & Edge Cases</h2>
+<p class="subtitle">Loading, error, validation, and empty states for the Bold & Modern design.</p>
+
+<div class="section">
+  <h3>Loading State (during submission)</h3>
+  <div style="max-width:700px; margin:0 auto; margin-bottom:24px;">
+    <div style="display:flex; gap:12px;">
+      <button style="flex:1; padding:16px; border:none; border-radius:12px; background:linear-gradient(135deg,#d97706,#b45309); color:#fff; font-weight:700; font-size:1rem; display:flex; align-items:center; justify-content:center; gap:10px; cursor:default;">
+        <span style="display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%;"></span>
+        Processing...
+      </button>
+      <button style="padding:16px 24px; border:1px solid #e2e8f0; border-radius:12px; background:#f1f5f9; color:#94a3b8; font-weight:600; font-size:0.95rem; cursor:default;">Reset</button>
+    </div>
+    <div style="margin-top:12px; font-size:0.75rem; color:#94a3b8; text-align:center;">Creating profile → Submitting application → Evaluating...</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Validation Errors (inline + field-level)</h3>
+  <div style="max-width:700px; margin:0 auto; margin-bottom:24px;">
+    <div style="background:#fff; padding:24px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05); position:relative;">
+      <div style="position:absolute; left:-8px; top:29px; width:18px; height:18px; border-radius:50%; background:#f59e0b;"></div>
+      <div style="font-weight:700; color:#0f172a; margin-bottom:2px; margin-left:20px;">Business Profile</div>
+      <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px; margin-left:20px;">Step 1</div>
+
+      <div style="background:#fee2e2; padding:10px 14px; border-radius:8px; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <span style="font-weight:600; color:#991b1b; font-size:0.8rem;">&#9888;</span>
+        <span style="color:#991b1b; font-size:0.85rem;">Please fix 2 errors before submitting</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:600; color:#dc2626; margin-bottom:4px;">PAN Number</div>
+          <div style="padding:10px 12px; border:1.5px solid #dc2626; border-radius:8px; background:#fff; font-size:0.9rem; color:#dc2626;">AB123</div>
+          <div style="font-size:0.7rem; color:#dc2626; margin-top:4px;">Must match AAAAA9999A format</div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; font-weight:600; color:#475569; margin-bottom:4px;">Business Type</div>
+          <div style="padding:10px 12px; border:1.5px solid #e2e8f0; border-radius:8px; background:#fafbfc; font-size:0.9rem; color:#0f172a;">Retail</div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; font-weight:600; color:#dc2626; margin-bottom:4px;">Monthly Revenue</div>
+          <div style="padding:10px 12px; border:1.5px solid #dc2626; border-radius:8px; background:#fff; font-size:0.9rem; color:#dc2626;">-5000</div>
+          <div style="font-size:0.7rem; color:#dc2626; margin-top:4px;">Revenue cannot be negative</div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem; font-weight:600; color:#475569; margin-bottom:4px;">Owner Name</div>
+          <div style="padding:10px 12px; border:1.5px solid #e2e8f0; border-radius:8px; background:#fafbfc; font-size:0.9rem; color:#0f172a;">Amit Sharma</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Server Error (API failure)</h3>
+  <div style="max-width:700px; margin:0 auto; margin-bottom:24px;">
+    <div style="background:#fff; border-radius:12px; padding:20px 24px; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="width:36px; height:36px; border-radius:50%; background:#fee2e2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <span style="color:#dc2626; font-weight:700;">!</span>
+        </div>
+        <div>
+          <div style="font-weight:700; color:#0f172a; margin-bottom:4px;">Something went wrong</div>
+          <div style="font-size:0.85rem; color:#64748b; line-height:1.5;">Unable to reach the server. Please check your connection and try again.</div>
+          <button style="margin-top:12px; padding:10px 20px; border:1.5px solid #e2e8f0; border-radius:8px; background:#fff; color:#1e293b; font-weight:600; font-size:0.85rem; cursor:default;">Try Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Empty / Initial State</h3>
+  <div style="max-width:700px; margin:0 auto; margin-bottom:24px;">
+    <div style="background:#fff; border:1px dashed #e2e8f0; border-radius:16px; padding:48px 32px; text-align:center;">
+      <div style="width:56px; height:56px; border-radius:50%; background:#fefce8; border:2px dashed #fcd34d; margin:0 auto 16px; display:flex; align-items:center; justify-content:center;">
+        <span style="font-size:1.5rem; color:#f59e0b;">&#9998;</span>
+      </div>
+      <div style="font-weight:700; color:#1e293b; font-size:1rem; margin-bottom:4px;">No application yet</div>
+      <div style="font-size:0.85rem; color:#94a3b8; max-width:300px; margin:0 auto; line-height:1.5;">Fill in your business profile and loan details above to receive an instant credit decision.</div>
+    </div>
+
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>Key State Rules</h3>
+  <div style="max-width:700px; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Loading</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Spinner inside submit button</li>
+          <li>Button text changes to "Processing..."</li>
+          <li>All inputs and reset button disabled</li>
+          <li>Progress hint text below form</li>
+        </ul>
+      </div>
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Validation Error</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Red border + red label on offending field</li>
+          <li>Error message below field</li>
+          <li>Summary banner with error count</li>
+          <li>Client-side + server-side validation</li>
+        </ul>
+      </div>
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Server Error</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Error card with icon + message</li>
+          <li>"Try Again" button to retry</li>
+          <li>No redirect, stays on same page</li>
+          <li>Handles timeout + network failure</li>
+        </ul>
+      </div>
+      <div style="background:#fff; padding:16px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+        <h4 style="font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Success</h4>
+        <ul style="font-size:0.8rem; color:#475569; margin:0; padding-left:16px; line-height:1.8;">
+          <li>Result card slides in below form</li>
+          <li>Green bar (approved) or red bar (rejected)</li>
+          <li>Form stays filled (user can adjust + retry)</li>
+          <li>Reason codes shown as chips</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
