@@ -1,0 +1,31 @@
+{
+  "name": "vitto-lending-backend",
+  "version": "1.0.0",
+  "description": "MSME Lending Decision System Backend",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/tests/**/*.test.js",
+    "test:unit": "node --test src/tests/unit/**/*.test.js",
+    "test:integration": "node --test src/tests/integration/**/*.test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "mongodb": "^6.8.0",
+    "pg": "^8.12.0",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
