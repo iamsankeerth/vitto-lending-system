@@ -28,9 +28,9 @@ export class DecisionEngine {
 
     // Revenue-to-EMI ratio scoring
     const revenueEmiThresholds = DecisionThresholds.revenueToEmiThresholds;
-    for (let i = revenueEmiThresholds.length - 1; i >= 0; i--) {
+    for (let i = 0; i < revenueEmiThresholds.length; i++) {
       const t = revenueEmiThresholds[i];
-      if (revenueToEmiRatio < t.min) {
+      if (revenueToEmiRatio >= t.min) {
         if (t.hardReject) {
           hardReject = true;
           reasonCodes.push(ReasonCodes.LOW_REPAYMENT_CAPACITY);
@@ -44,9 +44,9 @@ export class DecisionEngine {
 
     // Loan-to-revenue multiple scoring
     const loanRevThresholds = DecisionThresholds.loanToRevenueThresholds;
-    for (let i = loanRevThresholds.length - 1; i >= 0; i--) {
+    for (let i = 0; i < loanRevThresholds.length; i++) {
       const t = loanRevThresholds[i];
-      if (loanToRevenueMultiple > t.max) {
+      if (loanToRevenueMultiple <= t.max) {
         if (t.hardReject) {
           hardReject = true;
           reasonCodes.push(ReasonCodes.HIGH_LOAN_RATIO);
