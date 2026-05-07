@@ -61,10 +61,10 @@ Use this checklist to ensure every required item from the assignment PDF is sati
 - [x] GitHub repo exists and is shareable (public or shared access)
   - URL: https://github.com/iamsankeerth/vitto-lending-system
 - [x] Commit history is clean (not a single commit dump)
-- [ ] Deployed preview exists:
-  - [ ] frontend URL works
-  - [ ] backend URL works
-  - [ ] both are accessible
+- [x] Deployed preview exists:
+  - [x] frontend URL works: https://vitto-lending-system-1.onrender.com
+  - [x] backend URL works: https://vitto-lending-system-w8nd.onrender.com
+  - [x] both are accessible
 - [x] README includes:
   - [x] setup guide that works
   - [x] env var list

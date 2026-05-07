@@ -3,8 +3,8 @@
 A production-ready MSME lending decision platform. Collects business profiles and loan applications, evaluates risk through an explainable scoring model, and returns structured credit decisions with reason codes.
 
 **Live Demo:**
-- Frontend: http://localhost:5173 (local) | *Deployed URL coming soon*
-- Backend API: http://localhost:4001 (local) | *Deployed URL coming soon*
+- Frontend: https://vitto-lending-system-1.onrender.com
+- Backend API: https://vitto-lending-system-w8nd.onrender.com
 
 **Repository:** https://github.com/iamsankeerth/vitto-lending-system
 
@@ -262,8 +262,8 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for platform-specific guides.
 
 
 **Deployed URLs:**
-- Frontend: `<TODO>`
-- Backend: `<TODO>`
+- Frontend: https://vitto-lending-system-1.onrender.com
+- Backend: https://vitto-lending-system-w8nd.onrender.com
 
 ---
 
