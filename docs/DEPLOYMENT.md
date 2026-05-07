@@ -35,7 +35,7 @@ docker-compose up --build
 | Frontend | http://localhost:5173 | React dev server with hot reload |
 | Backend | http://localhost:4000 | Express API |
 | PostgreSQL | localhost:5432 | Credentials: postgres/postgres |
-| MongoDB | localhost:27017 | No auth required |
+
 
 **Stop:**
 ```bash
@@ -136,7 +136,6 @@ docker-compose down -v
 | `PORT` | No | 4000 | HTTP server port |
 | `NODE_ENV` | No | development | `development` or `production` |
 | `POSTGRES_URL` | **Yes** | -- | PostgreSQL connection string |
-| `MONGODB_URL` | No | -- | MongoDB connection string (optional) |
 | `CORS_ORIGIN` | No | * | Allowed CORS origin |
 | `ANNUAL_INTEREST_RATE_PCT` | No | 18 | Interest rate for EMI calc |
 | `APPROVAL_SCORE_THRESHOLD` | No | 60 | Minimum score to approve |
@@ -154,7 +153,6 @@ docker-compose down -v
 PORT=4000
 NODE_ENV=production
 POSTGRES_URL=postgresql://user:pass@host:5432/vitto_lending
-MONGODB_URL=mongodb+srv://user:pass@cluster.mongodb.net/vitto_lending
 CORS_ORIGIN=https://vitto-lending-frontend.vercel.app
 ANNUAL_INTEREST_RATE_PCT=18
 APPROVAL_SCORE_THRESHOLD=60
@@ -239,6 +237,5 @@ The backend uses `express-rate-limit`. For integration tests, the limit is set t
 | **Neon** | Serverless | Yes (500 MB) | Auto-scaling |
 | **Supabase** | Managed | Yes (500 MB) | Full Postgres |
 | **Railway** | Managed | Yes ($5 credit) | Easy setup |
-| **MongoDB Atlas** | Managed | Yes (512 MB) | Audit trail |
 
 **Recommendation for quick deployment:** Render Postgres + Render Web Service + Vercel Frontend.

@@ -46,12 +46,12 @@ Use this checklist to ensure every required item from the assignment PDF is sati
 - [x] Frontend uses React
 - [x] Backend uses Node/Express
 - [x] PostgreSQL is used (core records)
-- [x] MongoDB is used (audit trail)
+- [x] Audit trail stored in PostgreSQL
 
 ## Optional Bonuses (Only If Time Permits)
 
 - [x] Async decision processing with status polling (optional) -- *deferred to future*
-- [x] Audit trail with timestamps (recommended; satisfies MongoDB purpose cleanly)
+- [x] Audit trail with timestamps (recommended)
 - [x] Validation middleware + structured errors (recommended)
 - [x] Rate limiting on decision endpoints (recommended)
 - [x] Docker Compose for local development (recommended)

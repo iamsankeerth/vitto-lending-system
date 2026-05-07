@@ -13,7 +13,6 @@ export const config = {
   port: parseInt(process.env.PORT || '4000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   postgresUrl: requireEnv('POSTGRES_URL'),
-  mongodbUrl: requireEnv('MONGODB_URL'),
   corsOrigin: process.env.CORS_ORIGIN || '*',
   annualInterestRatePct: parseFloat(process.env.ANNUAL_INTEREST_RATE_PCT || '18'),
   approvalScoreThreshold: parseInt(process.env.APPROVAL_SCORE_THRESHOLD || '60', 10),

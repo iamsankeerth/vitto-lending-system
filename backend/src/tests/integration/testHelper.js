@@ -2,7 +2,7 @@ import { createApp } from '../../app.js';
 import { PostgresBusinessProfileRepository } from '../../adapters/persistence/postgres/PostgresBusinessProfileRepository.js';
 import { PostgresLoanApplicationRepository } from '../../adapters/persistence/postgres/PostgresLoanApplicationRepository.js';
 import { PostgresCreditDecisionRepository } from '../../adapters/persistence/postgres/PostgresCreditDecisionRepository.js';
-import { MongoAuditLogAdapter } from '../../adapters/persistence/mongo/MongoAuditLogAdapter.js';
+import { PostgresAuditLogAdapter } from '../../adapters/persistence/postgres/PostgresAuditLogAdapter.js';
 
 // Mock repositories for integration testing
 class MockProfileRepo {

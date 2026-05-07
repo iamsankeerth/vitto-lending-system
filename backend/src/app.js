@@ -7,7 +7,7 @@ import { createLogger } from './infrastructure/logging/logger.js';
 import { PostgresBusinessProfileRepository } from './adapters/persistence/postgres/PostgresBusinessProfileRepository.js';
 import { PostgresLoanApplicationRepository } from './adapters/persistence/postgres/PostgresLoanApplicationRepository.js';
 import { PostgresCreditDecisionRepository } from './adapters/persistence/postgres/PostgresCreditDecisionRepository.js';
-import { MongoAuditLogAdapter } from './adapters/persistence/mongo/MongoAuditLogAdapter.js';
+import { PostgresAuditLogAdapter } from './adapters/persistence/postgres/PostgresAuditLogAdapter.js';
 
 import { CreateBusinessProfileUseCase } from './application/use-cases/CreateBusinessProfileUseCase.js';
 import { CreateLoanApplicationUseCase } from './application/use-cases/CreateLoanApplicationUseCase.js';
@@ -40,7 +40,7 @@ export function createApp() {
   const profileRepo = new PostgresBusinessProfileRepository();
   const loanRepo = new PostgresLoanApplicationRepository();
   const decisionRepo = new PostgresCreditDecisionRepository();
-  const auditLog = new MongoAuditLogAdapter();
+  const auditLog = new PostgresAuditLogAdapter();
 
   // Use Cases
   const createProfileUseCase = new CreateBusinessProfileUseCase(profileRepo, auditLog);

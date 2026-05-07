@@ -11,13 +11,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/src/adapters/persistence/postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
-  mongo:
-    image: mongo:7
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
   backend:
     build:
       context: ./backend
@@ -28,13 +21,11 @@ services:
       PORT: 4000
       NODE_ENV: development
       POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/vitto_lending
-      MONGODB_URL: mongodb://mongo:27017/vitto_lending
       CORS_ORIGIN: http://localhost:5173
       ANNUAL_INTEREST_RATE_PCT: 18
       APPROVAL_SCORE_THRESHOLD: 60
     depends_on:
       - postgres
-      - mongo
     volumes:
       - ./backend/src:/app/src
     command: npm run dev
@@ -54,4 +45,3 @@ services:
 
 volumes:
   postgres_data:
-  mongo_data:

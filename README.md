@@ -33,7 +33,6 @@ A production-ready MSME lending decision platform. Collects business profiles an
 
 - Node.js 18+
 - PostgreSQL 14+ (or Docker)
-- MongoDB 6+ (optional -- backend works without it)
 
 ### Option 1: Docker Compose (Recommended)
 
@@ -46,7 +45,6 @@ docker-compose up --build
 | Frontend | http://localhost:5173 |
 | Backend API | http://localhost:4000 |
 | PostgreSQL | localhost:5432 |
-| MongoDB | localhost:27017 |
 
 ### Option 2: Manual Setup
 
@@ -78,7 +76,7 @@ See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions including Pos
 | Backend | Node.js 20 + Express |
 | Validation | Zod (runtime schema validation) |
 | Core Database | PostgreSQL 16 (system of record) |
-| Audit Database | MongoDB 7 (append-only audit trail) |
+| Audit Trail | PostgreSQL `audit_events` table |
 | Testing | Node.js built-in test runner + Supertest |
 | Deployment | Docker Compose / Render / Vercel |
 
@@ -96,7 +94,6 @@ See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions including Pos
 - **Structured Validation** -- Zod schemas on every endpoint with field-level error details
 - **Consistent API Envelope** -- every response includes `{ data/error, meta: { requestId } }`
 - **Rate Limiting** -- decision endpoints protected against abuse
-- **Graceful Degradation** -- MongoDB audit failure does not block core decision
 - **Comprehensive Testing** -- 43 tests covering unit logic, integration flows, and edge cases
 
 ### Frontend
@@ -116,7 +113,7 @@ React SPA (Port 5173)
     -> Use Cases (application orchestration)
       -> Decision Engine (pure business logic)
       -> PostgreSQL Repositories (core state)
-      -> MongoDB Audit Logger (events)
+      -> PostgreSQL Audit Logger (events)
 ```
 
 ### Design Principles
@@ -124,7 +121,7 @@ React SPA (Port 5173)
 1. **Decision Engine Isolation** -- pure domain module with zero dependencies on Express, SQL, or logging
 2. **Paise Storage** -- all monetary values stored as integers (paise) in PostgreSQL to avoid floating-point errors
 3. **API Contracts** -- rupees in the API, paise in the database; conversion happens at the controller boundary
-4. **Audit Independence** -- PostgreSQL owns core state; MongoDB owns append-only audit events
+4. **Audit Independence** -- Core state and audit trail both live in PostgreSQL, but in separate tables with different access patterns
 
 See [docs/ARCHITECTURE_WRITEUP.md](docs/ARCHITECTURE_WRITEUP.md) for the full write-up and [docs/Architecture_Writeup.pdf](docs/Architecture_Writeup.pdf) for the PDF version.
 
@@ -262,7 +259,7 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for platform-specific guides.
 | **Railway** | Static Site | Service | Railway Postgres |
 | **Vercel** | Project | -- | -- |
 | **Neon** | -- | -- | Serverless Postgres |
-| **MongoDB Atlas** | -- | -- | Managed MongoDB |
+
 
 **Deployed URLs:**
 - Frontend: `<TODO>`
@@ -305,7 +302,7 @@ vitto-lending-system/
           middleware/
         persistence/
           postgres/
-          mongo/
+          PostgresAuditLogAdapter.js
       tests/
         unit/
         integration/
@@ -347,7 +344,7 @@ vitto-lending-system/
 2. **Format-Only PAN Validation** -- Real verification requires external government APIs outside assignment scope.
 3. **Minimal UI** -- Prioritized clarity, correctness, and accessibility over complex visual design.
 4. **Paise Storage in PostgreSQL** -- Avoids floating-point rounding issues by storing money as integers.
-5. **MongoDB Audit-Only** -- Core domain data lives in PostgreSQL; MongoDB handles append-only audit events.
+5. **Single Database** -- Both core state and audit trail live in PostgreSQL, simplifying deployment and reducing external dependencies.
 6. **Node.js Built-in Test Runner** -- Avoids external test framework dependencies; works out of the box with Node 20+.
 
 ## What I'd Improve With More Time

@@ -12,7 +12,6 @@ Complete instructions for setting up the Vitto Lending Decision System on your l
   - [macOS](#macos)
   - [Linux](#linux)
 - [PostgreSQL Setup](#postgresql-setup)
-- [MongoDB Setup](#mongodb-setup)
 - [Environment Variables](#environment-variables)
 - [Running Tests](#running-tests)
 - [Common Issues](#common-issues)
@@ -58,7 +57,6 @@ docker-compose down -v
 ### Prerequisites
 - Node.js 18+ (`node --version`)
 - PostgreSQL 14+ installed and running
-- MongoDB 6+ (optional -- backend works without it)
 
 ### Windows
 
@@ -257,32 +255,6 @@ postgresql://postgres:postgres@localhost:5432/vitto_lending
 
 ---
 
-## MongoDB Setup
-
-**Note:** MongoDB is optional. The backend works without it -- audit logging is gracefully skipped.
-
-### Using Docker
-
-```bash
-docker run -d -p 27017:27017 --name vitto-mongo mongo:7
-```
-
-### Using Homebrew (macOS)
-
-```bash
-brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community
-```
-
-### Connection URL
-
-```
-mongodb://localhost:27017/vitto_lending
-```
-
----
-
 ## Environment Variables
 
 ### Backend `.env`
@@ -294,7 +266,6 @@ NODE_ENV=development
 
 # Database
 POSTGRES_URL=postgresql://postgres:postgres@localhost:5432/vitto_lending
-MONGODB_URL=mongodb://localhost:27017/vitto_lending
 
 # CORS
 CORS_ORIGIN=http://localhost:5173
@@ -387,15 +358,6 @@ Run the schema file:
 ```bash
 psql -d vitto_lending -f backend/src/adapters/persistence/postgres/schema.sql
 ```
-
-### MongoDB connection errors
-
-These are safe to ignore. The backend works without MongoDB -- it just won't log audit events.
-
-To suppress the warnings, either:
-1. Start MongoDB
-2. Remove `MONGODB_URL` from `.env`
-3. Set `NODE_ENV=production` (hides warnings)
 
 ### Frontend "Failed to fetch"
 

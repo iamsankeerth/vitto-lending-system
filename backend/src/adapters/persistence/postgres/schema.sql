@@ -27,3 +27,14 @@ CREATE TABLE IF NOT EXISTS credit_decisions (
   derived_metrics_json JSONB NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS audit_events (
+  id UUID PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  request_id TEXT NOT NULL,
+  business_profile_id UUID,
+  loan_application_id UUID,
+  decision_id UUID,
+  payload JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

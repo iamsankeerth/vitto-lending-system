@@ -4,7 +4,7 @@
 
 This project is a lightweight lending decision system for MSME loan applications. It collects a business profile and loan request, evaluates the request using an explainable scoring model, and returns a structured decision with a credit score and reason codes.
 
-**Stack:** React (SPA) · Node.js/Express (REST API) · PostgreSQL (system of record) · MongoDB (audit trail)
+**Stack:** React (SPA) · Node.js/Express (REST API) · PostgreSQL (system of record + audit trail)
 
 ---
 
@@ -17,31 +17,29 @@ React SPA (Port 5173)
     -> Use cases (application orchestration)
       -> Decision engine (pure business logic)
       -> Repositories (Postgres persistence)
-      -> Audit logger (Mongo persistence)
+      -> Audit logger (Postgres persistence)
 ```
 
 **Key design choice:** keep the decision logic isolated so it is testable, explainable, and easy to defend.
 
 ---
 
-## Data Storage Strategy (Postgres + Mongo)
+## Data Storage Strategy (PostgreSQL)
 
 **PostgreSQL** is the system of record for:
 - Business profiles
 - Loan applications
 - Credit decisions (including reason codes and derived metrics snapshot)
+- Audit events (append-only trail of profile creation, application creation, and decision creation)
 
-**MongoDB** is used for:
-- An append-only audit trail of events such as profile creation, application creation, and decision creation
-
-**Why split it this way:**
+**Why use PostgreSQL for both:**
 - The core domain data is relational and benefits from constraints and joins
-- Audit logs are naturally document-like and append-only
-- MongoDB gets a clear, defensible responsibility without forcing dual-ownership of core state
+- Audit events are simple structured records that fit well in a relational table
+- Single database simplifies deployment, backup, and operations
+- No need to manage a second database connection or dependency
 
 **Audit failure behavior:**
-- If Postgres commit succeeds but Mongo audit write fails, the API still returns success (the core decision is already persisted); the server logs the audit failure for visibility.
-- The backend is designed to work entirely without MongoDB -- audit logging is optional.
+- If the audit insert fails, the API still returns success (the core decision is already persisted); the server logs the audit failure for visibility.
 
 ---
 
