@@ -1,53 +1,39 @@
 # Vitto Lending Decision System
 
-Lightweight end-to-end lending decision system for MSME loan applications. Collects a business profile and loan request, evaluates using an explainable scoring model, and returns a structured decision with a credit score and reason codes.
+A production-ready MSME lending decision platform. Collects business profiles and loan applications, evaluates risk through an explainable scoring model, and returns structured credit decisions with reason codes.
 
-## Stack
+**Live Demo:**
+- Frontend: http://localhost:5173 (local) | *Deployed URL coming soon*
+- Backend API: http://localhost:4001 (local) | *Deployed URL coming soon*
 
-- **Frontend:** React + Vite (JavaScript)
-- **Backend:** Node.js + Express (JavaScript)
-- **PostgreSQL:** System of record for profiles, applications, and decisions
-- **MongoDB:** Audit trail of submissions and decisions with timestamps
+**Repository:** https://github.com/iamsankeerth/vitto-lending-system
 
-## Features
+---
 
-- Business profile creation (owner name, PAN, business type, monthly revenue)
-- Loan application creation (amount, tenure, purpose)
-- Decision engine endpoint returning:
-  - `APPROVED` or `REJECTED`
-  - Credit score (0–100)
-  - Reason codes (e.g., `LOW_REPAYMENT_CAPACITY`, `HIGH_LOAN_RATIO`)
-  - Derived metrics (EMI, revenue-to-EMI ratio, loan-to-revenue multiple)
-- Single-page React UI to submit and view results
-- Structured validation and error responses
-- Graceful handling of missing/invalid/conflicting inputs
-- Rate limiting on decision endpoints
-- Docker Compose for local development
+## Table of Contents
 
-## Architecture
+- [Quick Start](#quick-start)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Decision Logic](#decision-logic)
+- [API Overview](#api-overview)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [Tradeoffs](#tradeoffs)
+- [License](#license)
 
-```text
-React SPA
-  -> Express API (controllers + validation)
-    -> Use Cases
-      -> Decision Engine (pure logic)
-      -> Postgres Repositories (core state)
-      -> Mongo Audit Logger (events)
-```
+---
 
-**Decision Engine Hard Boundaries:**
-- Does not know about Express
-- Does not know about SQL
-- Does not write logs directly
-- Does not fetch data itself
-
-## Local Setup
+## Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
 - PostgreSQL 14+ (or Docker)
-- MongoDB 6+ (or Docker)
+- MongoDB 6+ (optional -- backend works without it)
 
 ### Option 1: Docker Compose (Recommended)
 
@@ -55,146 +41,105 @@ React SPA
 docker-compose up --build
 ```
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:4000
-- PostgreSQL: localhost:5432
-- MongoDB: localhost:27017
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:5173 |
+| Backend API | http://localhost:4000 |
+| PostgreSQL | localhost:5432 |
+| MongoDB | localhost:27017 |
 
 ### Option 2: Manual Setup
 
 **Backend:**
-
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env with your database URLs
 npm install
-# Run schema.sql against your PostgreSQL database
-npm run dev
+# Update .env with your database URLs, then:
+npm run dev        # Server starts on :4000
 ```
 
 **Frontend:**
-
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev        # Vite dev server on :5173
 ```
 
-### Environment Variables
+See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions including PostgreSQL configuration on Windows and macOS.
 
-Create `backend/.env`:
+---
 
-```env
-PORT=4000
-NODE_ENV=development
-POSTGRES_URL=postgresql://postgres:postgres@localhost:5432/vitto_lending
-MONGODB_URL=mongodb://localhost:27017/vitto_lending
-CORS_ORIGIN=http://localhost:5173
-ANNUAL_INTEREST_RATE_PCT=18
-APPROVAL_SCORE_THRESHOLD=60
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18 + Vite |
+| Backend | Node.js 20 + Express |
+| Validation | Zod (runtime schema validation) |
+| Core Database | PostgreSQL 16 (system of record) |
+| Audit Database | MongoDB 7 (append-only audit trail) |
+| Testing | Node.js built-in test runner + Supertest |
+| Deployment | Docker Compose / Render / Vercel |
+
+---
+
+## Features
+
+### Core
+- **Business Profile Creation** -- owner name, PAN, business type, monthly revenue
+- **Loan Application** -- amount, tenure (3--60 months), purpose
+- **Credit Decision** -- binary APPROVED/REJECTED with credit score (0--100) and reason codes
+- **Explainable Metrics** -- EMI estimate, revenue-to-EMI ratio, loan-to-revenue multiple
+
+### Quality of Service
+- **Structured Validation** -- Zod schemas on every endpoint with field-level error details
+- **Consistent API Envelope** -- every response includes `{ data/error, meta: { requestId } }`
+- **Rate Limiting** -- decision endpoints protected against abuse
+- **Graceful Degradation** -- MongoDB audit failure does not block core decision
+- **Comprehensive Testing** -- 43 tests covering unit logic, integration flows, and edge cases
+
+### Frontend
+- Single-page React application
+- Inline validation with clear error messages
+- Decision result panel with score, status, reason codes, and derived metrics
+- Responsive layout
+
+---
+
+## Architecture
+
+```text
+React SPA (Port 5173)
+  -> Express API (Port 4000/4001)
+    -> Validation Middleware (Zod schemas)
+    -> Use Cases (application orchestration)
+      -> Decision Engine (pure business logic)
+      -> PostgreSQL Repositories (core state)
+      -> MongoDB Audit Logger (events)
 ```
 
-## API Documentation
+### Design Principles
 
-Base URL: `/api`
+1. **Decision Engine Isolation** -- pure domain module with zero dependencies on Express, SQL, or logging
+2. **Paise Storage** -- all monetary values stored as integers (paise) in PostgreSQL to avoid floating-point errors
+3. **API Contracts** -- rupees in the API, paise in the database; conversion happens at the controller boundary
+4. **Audit Independence** -- PostgreSQL owns core state; MongoDB owns append-only audit events
 
-### `POST /api/business-profiles`
+See [docs/ARCHITECTURE_WRITEUP.md](docs/ARCHITECTURE_WRITEUP.md) for the full write-up and [docs/Architecture_Writeup.pdf](docs/Architecture_Writeup.pdf) for the PDF version.
 
-Create a business profile.
-
-**Request:**
-```json
-{
-  "ownerName": "Amit Sharma",
-  "pan": "ABCDE1234F",
-  "businessType": "retail",
-  "monthlyRevenueRupees": 250000
-}
-```
-
-### `POST /api/loan-applications`
-
-Create a loan application linked to a profile.
-
-**Request:**
-```json
-{
-  "businessProfileId": "uuid",
-  "requestedAmountRupees": 800000,
-  "tenureMonths": 18,
-  "purpose": "working_capital"
-}
-```
-
-### `POST /api/loan-applications/:id/decision`
-
-Evaluate a loan application and return a credit decision.
-
-**Response:**
-```json
-{
-  "data": {
-    "applicationId": "uuid",
-    "decisionId": "uuid",
-    "status": "APPROVED",
-    "creditScore": 74,
-    "reasonCodes": ["HIGH_LOAN_RATIO"],
-    "derivedMetrics": {
-      "estimatedEmiRupees": 51045,
-      "revenueToEmiRatio": 4.91,
-      "loanToRevenueMultiple": 3.2,
-      "annualInterestRatePct": 18
-    },
-    "createdAt": "2026-05-07T12:03:00.000Z"
-  },
-  "meta": {
-    "requestId": "uuid"
-  }
-}
-```
-
-### `GET /api/loan-applications/:id`
-
-Get full application details including profile and latest decision.
-
-### Error Responses
-
-All endpoints return consistent error envelopes:
-
-```json
-{
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Input validation failed",
-    "details": {
-      "pan": "PAN must match AAAAA9999A format"
-    }
-  },
-  "meta": {
-    "requestId": "uuid"
-  }
-}
-```
+---
 
 ## Decision Logic
 
-**Goal:** Explainable, defensible, documented thresholds.
-
 ### Assumptions
 - PAN validation is format-only (mock acceptable)
-- Annual interest rate for EMI estimate: `18%`
-- Approval threshold: `60`
-- Tenure range: `3` to `60` months
-
-### Signals Used
-1. **Revenue-to-EMI ratio** — can the business afford monthly repayments?
-2. **Loan amount as a multiple of monthly revenue** — is the loan proportional to business size?
-3. **Tenure risk** — very short (≤6) or very long (≥48) tenures carry penalties
-4. **Consistency checks** — extreme mismatches (e.g., ₹10k revenue + ₹1Cr loan) are hard-rejected
+- Annual interest rate for EMI estimate: **18%**
+- Approval threshold: **60** (score >= 60 = approved)
+- Tenure range: **3** to **60** months
 
 ### Scoring Model
-- Start with base score of `100`
+- Start with base score of **100**
 - Apply penalties per risk signal
 - Hard-reject on extreme inconsistencies
 - Approve if `score >= 60` and no hard reject
@@ -204,88 +149,220 @@ All endpoints return consistent error envelopes:
 **Revenue-to-EMI Ratio:**
 | Ratio | Penalty |
 |-------|---------|
-| ≥ 3.0 | 0 |
-| 2.0 – 2.99 | -10 |
-| 1.5 – 1.99 | -25 |
-| 1.2 – 1.49 | -40 |
+| >= 3.0 | 0 |
+| 2.0 -- 2.99 | -10 |
+| 1.5 -- 1.99 | -25 |
+| 1.2 -- 1.49 | -40 |
 | < 1.2 | Hard Reject |
 
 **Loan-to-Revenue Multiple:**
 | Multiple | Penalty |
 |----------|---------|
-| ≤ 4 | 0 |
-| 4.01 – 8 | -10 |
-| 8.01 – 12 | -25 |
-| 12.01 – 18 | -40 |
+| <= 4 | 0 |
+| 4.01 -- 8 | -10 |
+| 8.01 -- 12 | -25 |
+| 12.01 -- 18 | -40 |
 | > 18 | Hard Reject |
 
 **Tenure Risk:**
-- ≤ 6 months: -10
-- ≥ 48 months: -10
+- <= 6 months: -10
+- >= 48 months: -10
 
 **Inconsistency:**
-- Loan-to-revenue > 50x: -30
+- Loan-to-revenue > 50x: -30 (DATA_INCONSISTENCY)
 
 ### Reason Codes
-- `LOW_REPAYMENT_CAPACITY` — EMI too high relative to revenue
-- `HIGH_LOAN_RATIO` — Loan disproportionate to revenue
-- `EXTREME_TENURE` — Very short or very long tenure
-- `DATA_INCONSISTENCY` — Extreme mismatch in inputs
-- `INVALID_PAN_FORMAT` — Malformed PAN
-- `APPROVED` — Application meets criteria
+- `LOW_REPAYMENT_CAPACITY` -- EMI too high relative to revenue
+- `HIGH_LOAN_RATIO` -- Loan disproportionate to revenue
+- `EXTREME_TENURE` -- Very short or very long tenure
+- `DATA_INCONSISTENCY` -- Extreme mismatch in inputs
+- `INVALID_PAN_FORMAT` -- Malformed PAN
+- `APPROVED` -- Application meets criteria
 
-## Edge Case Handling
+---
 
-| Scenario | Handling |
-|----------|----------|
-| Missing fields | Client-side + server-side validation with structured errors |
-| Invalid formats | Structured validation errors (malformed PAN, negative numbers, non-numeric) |
-| Conflicting data | Valid request accepted, decision rejected with explainable reason codes |
-| Database failures | Graceful error responses; audit failure does not block core decision |
-| Rate limiting | 429 responses on excessive decision requests |
+## API Overview
+
+Base URL: `/api`
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/business-profiles` | Create business profile |
+| POST | `/api/loan-applications` | Create loan application |
+| POST | `/api/loan-applications/:id/decision` | Evaluate and return credit decision |
+| GET | `/api/loan-applications/:id` | Get application with profile and decision |
+| GET | `/api/health` | Health check |
+
+### Example: Create Business Profile
+```bash
+curl -X POST http://localhost:4000/api/business-profiles \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ownerName": "Amit Sharma",
+    "pan": "ABCDE1234F",
+    "businessType": "retail",
+    "monthlyRevenueRupees": 250000
+  }'
+```
+
+### Example: Evaluate Decision
+```bash
+curl -X POST http://localhost:4000/api/loan-applications/UUID/decision
+```
+
+See [docs/API.md](docs/API.md) for the complete API reference with all request/response schemas and error formats.
+
+---
 
 ## Testing
 
-**Backend Unit Tests:**
 ```bash
 cd backend
+
+# All tests
+npm test
+
+# Unit tests only
 npm run test:unit
+
+# Integration tests only
+npm run test:integration
 ```
 
-Tests cover:
-- PAN format validation
-- Money value object arithmetic
-- EMI calculation correctness
-- Decision engine scoring and hard-reject logic
+**Test Coverage:**
+- **Unit (20 tests):** PAN validation, Money arithmetic, EMI calculation, DecisionEngine scoring, hard-reject logic
+- **Integration (23 tests):** Profile creation, loan application, decision evaluation, validation errors, 404 handling, rate limiting, edge cases
+- **Total: 43 tests, all passing**
+
+### Key Test Scenarios
+- Invalid PAN format rejected
+- Negative/zero revenue rejected
+- Invalid tenure (< 3, > 60) rejected
+- Negative loan amount rejected
+- Invalid UUID format rejected
+- Non-existent resources return 404
+- Conflicting data (high loan vs low revenue) returns REJECTED, not 500
+- Boundary case (revenueToEmiRatio ~3.0) correctly approved
+- Rate limiting returns 429
+
+---
 
 ## Deployment
 
-- **Backend:** Render / Railway
-- **Frontend:** Vercel / Netlify
-- **PostgreSQL:** Neon / Supabase / Render Postgres
-- **MongoDB:** MongoDB Atlas
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for platform-specific guides.
+
+**Quick Options:**
+
+| Platform | Frontend | Backend | Database |
+|----------|----------|---------|----------|
+| **Docker Compose** | `localhost:5173` | `localhost:4000` | Built-in |
+| **Render** | Static Site | Web Service | Render Postgres |
+| **Railway** | Static Site | Service | Railway Postgres |
+| **Vercel** | Project | -- | -- |
+| **Neon** | -- | -- | Serverless Postgres |
+| **MongoDB Atlas** | -- | -- | Managed MongoDB |
 
 **Deployed URLs:**
 - Frontend: `<TODO>`
 - Backend: `<TODO>`
 
+---
+
+## Project Structure
+
+```text
+vitto-lending-system/
+  frontend/                  # React + Vite SPA
+    src/
+      App.jsx               # Main application
+      features/
+        application/
+          ApplicationForm.jsx
+          DecisionResult.jsx
+      lib/
+        api/client.js        # Axios-style fetch wrapper
+    package.json
+    vite.config.js
+
+  backend/                   # Node.js + Express API
+    src/
+      domain/                # Pure business logic
+        entities/
+        value-objects/
+        services/
+          DecisionEngine.js
+          EmiCalculator.js
+        ports/
+      application/           # Use cases
+        dto/
+        use-cases/
+      adapters/              # HTTP + persistence
+        http/
+          controllers/
+          routes/
+          middleware/
+        persistence/
+          postgres/
+          mongo/
+      tests/
+        unit/
+        integration/
+    package.json
+    .env.example
+
+  docs/                      # Documentation
+    ARCHITECTURE_WRITEUP.md
+    Architecture_Writeup.pdf
+    API.md
+    DEPLOYMENT.md
+    SETUP.md
+    CHECKLIST.md
+    EXECUTION_PLAN.md
+
+  docker-compose.yml
+  README.md
+```
+
+---
+
+## Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [docs/SETUP.md](docs/SETUP.md) | Detailed local setup (manual + Docker) |
+| [docs/API.md](docs/API.md) | Complete API reference |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Platform-specific deployment guides |
+| [docs/ARCHITECTURE_WRITEUP.md](docs/ARCHITECTURE_WRITEUP.md) | Architecture decisions & tradeoffs |
+| [docs/Architecture_Writeup.pdf](docs/Architecture_Writeup.pdf) | PDF version for submission |
+| [docs/CHECKLIST.md](docs/CHECKLIST.md) | Assignment requirement checklist |
+| [docs/EXECUTION_PLAN.md](docs/EXECUTION_PLAN.md) | Original implementation plan |
+
+---
+
 ## Tradeoffs Chosen
 
-1. **Synchronous decisioning** — Chosen for simplicity and reliability in a 1-day sprint; async job queue deferred to bonus.
-2. **Format-only PAN validation** — Real verification would require external integrations outside assignment scope.
-3. **Minimal UI** — Prioritized clarity and correctness over complex UI states.
-4. **Paise storage in Postgres** — Avoids floating-point rounding issues by storing money as integers.
-5. **MongoDB audit-only** — Keeps core domain data in PostgreSQL; Mongo handles append-only audit events.
+1. **Synchronous Decisioning** -- Chosen for simplicity and reliability in a time-boxed sprint; async job queue deferred to future work.
+2. **Format-Only PAN Validation** -- Real verification requires external government APIs outside assignment scope.
+3. **Minimal UI** -- Prioritized clarity, correctness, and accessibility over complex visual design.
+4. **Paise Storage in PostgreSQL** -- Avoids floating-point rounding issues by storing money as integers.
+5. **MongoDB Audit-Only** -- Core domain data lives in PostgreSQL; MongoDB handles append-only audit events.
+6. **Node.js Built-in Test Runner** -- Avoids external test framework dependencies; works out of the box with Node 20+.
 
 ## What I'd Improve With More Time
 
-- **Async decision processing** — Background job + polling endpoint for heavy evaluations
-- **Better observability** — Structured logs, metrics, distributed tracing
-- **Model calibration** — Train on sample datasets for nuanced risk weights
-- **Stronger abuse prevention** — Advanced rate limiting, IP blocking, request fingerprinting
-- **Real PAN verification** — Integrate with government APIs
-- **Admin dashboard** — View audit trail, decision trends, and model performance
+- **Async Decision Processing** -- Background job queue + polling endpoint for heavy evaluations
+- **Frontend Testing** -- React Testing Library tests for form validation and result rendering
+- **Better Observability** -- Structured logs (Pino), metrics (Prometheus), distributed tracing
+- **Model Calibration** -- Train on sample datasets for nuanced risk weights
+- **Stronger Abuse Prevention** -- Per-IP rate limiting, request fingerprinting, CAPTCHA
+- **Real PAN Verification** -- Integration with government verification APIs
+- **Admin Dashboard** -- View audit trail, decision trends, and model performance
+- **CI/CD Pipeline** -- GitHub Actions for automated testing and deployment
+
+---
 
 ## License
 
-This project was built as a technical assessment for Vitto.
+This project was built as a technical assessment for **Vitto**.

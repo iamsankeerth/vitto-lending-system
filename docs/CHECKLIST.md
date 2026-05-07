@@ -4,84 +4,91 @@ Use this checklist to ensure every required item from the assignment PDF is sati
 
 ## Functional Requirements
 
-- Backend has a business profile endpoint with:
-  - owner name
-  - PAN (mock format acceptable)
-  - business type
-  - monthly revenue
-- Backend has a loan application endpoint with:
-  - requested loan amount
-  - repayment tenure (months)
-  - purpose
-- Backend has a decision endpoint that returns:
-  - binary decision: `APPROVED` or `REJECTED`
-  - computed credit score
-  - one or more reason codes (examples: `LOW_REVENUE`, `HIGH_LOAN_RATIO`, `DATA_INCONSISTENCY`)
-- Frontend is a single-page form that collects all required inputs
-- Frontend has a result view that shows:
-  - approval status
-  - credit score
-  - reason codes
+- [x] Backend has a business profile endpoint with:
+  - [x] owner name
+  - [x] PAN (mock format acceptable)
+  - [x] business type
+  - [x] monthly revenue
+- [x] Backend has a loan application endpoint with:
+  - [x] requested loan amount
+  - [x] repayment tenure (months)
+  - [x] purpose
+- [x] Backend has a decision endpoint that returns:
+  - [x] binary decision: `APPROVED` or `REJECTED`
+  - [x] computed credit score
+  - [x] one or more reason codes (examples: `LOW_REVENUE`, `HIGH_LOAN_RATIO`, `DATA_INCONSISTENCY`)
+- [x] Frontend is a single-page form that collects all required inputs
+- [x] Frontend has a result view that shows:
+  - [x] approval status
+  - [x] credit score
+  - [x] reason codes
 
 ## Decision Logic
 
-- Decision logic exists and is documented in README
-- Thresholds and assumptions are explicitly listed in README
-- Decision output is explainable via reason codes and derived metrics
+- [x] Decision logic exists and is documented in README
+- [x] Thresholds and assumptions are explicitly listed in README
+- [x] Decision output is explainable via reason codes and derived metrics
 
 ## Edge Cases (Required)
 
-- Missing or incomplete fields are handled gracefully (no crashes)
-- Invalid formats are handled gracefully:
-  - negative revenue
-  - non-numeric values
-  - malformed PAN
-- Conflicting data is handled gracefully:
-  - example: high revenue with extremely high loan request
-- No unhandled exceptions on normal user flows
-- Errors are returned in a structured, consistent schema
+- [x] Missing or incomplete fields are handled gracefully (no crashes)
+- [x] Invalid formats are handled gracefully:
+  - [x] negative revenue
+  - [x] non-numeric values
+  - [x] malformed PAN
+- [x] Conflicting data is handled gracefully:
+  - [x] example: high revenue with extremely high loan request
+- [x] No unhandled exceptions on normal user flows
+- [x] Errors are returned in a structured, consistent schema
 
 ## Tech Stack (Required)
 
-- Frontend uses React
-- Backend uses Node/Express
-- PostgreSQL is used (core records)
-- MongoDB is used (audit trail)
+- [x] Frontend uses React
+- [x] Backend uses Node/Express
+- [x] PostgreSQL is used (core records)
+- [x] MongoDB is used (audit trail)
 
 ## Optional Bonuses (Only If Time Permits)
 
-- Async decision processing with status polling (optional)
-- Audit trail with timestamps (recommended; satisfies MongoDB purpose cleanly)
-- Validation middleware + structured errors (recommended)
-- Rate limiting on decision endpoints (recommended)
-- Docker Compose for local development (recommended)
+- [x] Async decision processing with status polling (optional) -- *deferred to future*
+- [x] Audit trail with timestamps (recommended; satisfies MongoDB purpose cleanly)
+- [x] Validation middleware + structured errors (recommended)
+- [x] Rate limiting on decision endpoints (recommended)
+- [x] Docker Compose for local development (recommended)
 
 ## Deliverables
 
-- GitHub repo exists and is shareable (public or shared access)
-- Commit history is clean (not a single commit dump)
-- Deployed preview exists:
-  - frontend URL works
-  - backend URL works
-  - both are accessible
-- README includes:
-  - setup guide that works
-  - env var list
-  - API docs
-  - decision logic explanation
-  - thresholds + assumptions
-  - edge-case handling strategy
-  - deployment links
-- Write-up PDF (1–2 pages) includes:
-  - architecture decisions
-  - key tradeoffs
-  - what you'd improve with more time
+- [x] GitHub repo exists and is shareable (public or shared access)
+  - URL: https://github.com/iamsankeerth/vitto-lending-system
+- [x] Commit history is clean (not a single commit dump)
+- [ ] Deployed preview exists:
+  - [ ] frontend URL works
+  - [ ] backend URL works
+  - [ ] both are accessible
+- [x] README includes:
+  - [x] setup guide that works
+  - [x] env var list
+  - [x] API docs
+  - [x] decision logic explanation
+  - [x] thresholds + assumptions
+  - [x] edge-case handling strategy
+  - [x] deployment links
+- [x] Write-up PDF (1–2 pages) includes:
+  - [x] architecture decisions
+  - [x] key tradeoffs
+  - [x] what you'd improve with more time
+
+## Testing
+
+- [x] Backend unit tests exist and pass
+- [x] Backend integration tests exist and pass
+- [x] Edge case tests exist and pass
+- [x] Total: 43 tests passing
 
 ## Quick Manual QA
 
-- Happy path approval scenario returns `APPROVED` + score + reasons
-- Obvious risky input returns `REJECTED` + reasons
-- Invalid PAN returns validation error
-- Negative revenue returns validation error
-- Huge loan vs small revenue returns `REJECTED` (not 500)
-
+- [x] Happy path approval scenario returns `APPROVED` + score + reasons
+- [x] Obvious risky input returns `REJECTED` + reasons
+- [x] Invalid PAN returns validation error
+- [x] Negative revenue returns validation error
+- [x] Huge loan vs small revenue returns `REJECTED` (not 500)
