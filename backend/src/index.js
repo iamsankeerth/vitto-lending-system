@@ -1,11 +1,14 @@
 import { createApp } from './app.js';
 import { pool } from './adapters/persistence/postgres/pool.js';
 import { config } from './infrastructure/config/env.js';
+import { runMigrations } from './adapters/persistence/postgres/migrate.js';
 
 async function main() {
   try {
     await pool.query('SELECT 1');
     console.log('PostgreSQL connected');
+
+    await runMigrations();
 
     const app = createApp();
     app.listen(config.port, () => {
